@@ -34,7 +34,7 @@ setup(
         'click~=6.7',
         'colorama~=0.3',
         'db-transfer~=0.3.3',
-        'requests~=2.18.4',
+        'requests~=2.20.0',
         'pyfiglet~=0.7.5',
         'termcolor~=1.1.0',
     ],
