@@ -20,5 +20,7 @@ cat2_file = Cat2(file_path, line_from, line_to)
 # cat2_file is an iterator object
 for line in cat2_file:
 	print(line)
+	print(cat2_file.line_number)
+	print(cat2_file.is_bytes)
 
 ```
