@@ -98,6 +98,8 @@ class Cat2:
 
 	@property
 	def is_bytes(self):
+		"""Is it a bytes file"""
+
 		return self._file_format == 'b'
 
 
