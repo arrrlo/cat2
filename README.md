@@ -1,4 +1,7 @@
 <h1>cat2</h1>
+
+[![PyPI version](https://badge.fury.io/py/cat2.svg)](https://badge.fury.io/py/cat2)
+
 <h2>Print file contents like a boss</h2>
 
 <img src="https://i.ibb.co/XFgv40n/Screen-Shot-2018-12-01-at-21-50-08.png">
