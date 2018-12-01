@@ -2,7 +2,7 @@ import os
 import re
 import click
 
-from cat2 import Cat2
+from cat2 import Cat2, Cat2Exception
 
 
 @click.command()
@@ -14,39 +14,42 @@ def cli(file_path, query, line_from, line_to):
 
 	rows, columns = os.popen('stty size', 'r').read().split()
 	
-	click.echo()
+	print('Analysing file...', end="\r")
+	print('                 ')
 
-	cat2_file = Cat2(file_path)
+	cat2_file = Cat2(file_path, line_from, line_to)
+	
+	try:
+		if line_from is not None:
+			if line_to:
+				number_of_lines = line_to-line_from
+			else:
+				number_of_lines = len(cat2_file)-line_from
+		else:
+			number_of_lines = len(cat2_file)
 
-	if line_from:
-		if line_from < 0:
-			cat2_file_len = len(cat2_file)
-			line_from = cat2_file_len+line_from
+		if number_of_lines > 200:
+			click.secho(f'You are about to print {number_of_lines} lines.', fg='red')
+			if not click.confirm('Do you want to continue?'):
+				click.echo()
+				return
 
-	for i, line in enumerate(cat2_file):
-		i = i+1
-		
-		if line_from:
-			if i < line_from:
-				continue
+		for line in cat2_file:
+			click.secho(f' {cat2_file.line_number}. ', bg='blue', bold=True, nl=False)
 
-		no = i
-		if i <= 9:
-			no = f'0{i}'
-		click.secho(f' {no}. ', bg='blue', bold=True, nl=False)
+			if query:
+				if query in line:
+					line_parts = line.split(query)
+					line = click.style(line_parts[0], bg='red')
+					line += click.style(query, bg='yellow', fg='black')
+					line += click.style(line_parts[1], bg='red')
+					line += click.style(' '*(int(columns)-len(line)), bg='red')
+			
+			click.echo(f'  {line}  ')
 
-		if query:
-			if query in line:
-				line_parts = line.split(query)
-				line = click.style(line_parts[0], bg='red')
-				line += click.style(query, bg='yellow', fg='black')
-				line += click.style(line_parts[1], bg='red')
-				line += click.style(' '*(int(columns)-len(line)), bg='red')
-		
-		click.echo(f'  {line}  ')
-
-		if line_to:
-			if i > line_to:
-				break
+			if cat2_file.is_bytes:
+				click.echo()
+	except Cat2Exception as e:
+		click.secho(str(e), fg='red')
 		
 	click.echo()
