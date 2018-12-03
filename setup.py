@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='cat2',
-    version='0.3.0',
+    version='0.3.1',
 
     description='Print file contents like a boss',
     long_description=readme(),
